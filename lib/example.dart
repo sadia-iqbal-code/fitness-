@@ -15,12 +15,12 @@ import 'package:untitled1/onBoardingScreen.dart';
     void initState() {
     super.initState();
     // Initialize the video controller
-    _controller = VideoPlayerController.asset('assets/exee.mp4')
+    _controller = VideoPlayerController.asset('assets/piyari.mp4')
     ..initialize().then((_) {
     // Once the video is initialized, start playing
     setState(() {
     _controller.setLooping(true);
-    _controller.setVolume(2);
+    _controller.setVolume(8);
     _controller.play();
     });
     });
@@ -59,9 +59,15 @@ import 'package:untitled1/onBoardingScreen.dart';
     children: [
     Image(image: AssetImage('assets/fit.png'),height: 200,width: 200,),
     SizedBox(height: 20),
-    ElevatedButton(
-    onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>FitnessOnboardingScreen()));},
-    child: Text('Get Started',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
+    Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        ElevatedButton(
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.teal,),
+        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>FitnessOnboardingScreen()));},
+        child: Text('Get Started',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
+        ),
+      ],
     ),
     ],
     ),

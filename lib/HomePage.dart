@@ -1,7 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled1/Setting.dart';
 
-import 'package:untitled1/userProvider.dart';
+import 'userProvider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -11,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+
   int _selectedIndex = 0;
   int completedDays = 0;
 
@@ -31,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Map<String, List<Map<String, dynamic>>> plans = {
     'Underweight': List.generate(
       30,
-      (index) => {
+          (index) => {
         'day': 'Day ${index + 1}',
         'quote': '“Gain strength, gain health!”',
         'exercise': [
@@ -49,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     'Normal': List.generate(
       30,
-      (index) => {
+          (index) => {
         'day': 'Day ${index + 1}',
         'quote': '“Stay consistent, stay healthy!”',
         'exercise': [
@@ -67,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     'Overweight': List.generate(
       30,
-      (index) => {
+          (index) => {
         'day': 'Day ${index + 1}',
         'quote': '“Small steps lead to big changes!”',
         'exercise': [
@@ -85,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     'Obese': List.generate(
       30,
-      (index) => {
+          (index) => {
         'day': 'Day ${index + 1}',
         'quote': '“Every step is progress!”',
         'exercise': [
@@ -103,6 +108,39 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   };
 
+  @override
+  void initState() {
+    super.initState();
+    _loadCompletedDays();
+  }
+
+  Future<void> _loadCompletedDays() async {
+    final prefs = await SharedPreferences.getInstance();
+    for (var category in categories) {
+      for (int i = 0; i < (plans[category]?.length ?? 0); i++) {
+        final key = '${category}_Day$i';
+        plans[category]![i]['isCompleted'] = prefs.getBool(key) ?? false;
+      }
+    }
+    setState(() {
+      completedDays = _calculateCompletedDays();
+    });
+  }
+
+  Future<void> _saveDayState(String category, int index, bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = '${category}_Day$index';
+    await prefs.setBool(key, value);
+  }
+
+  int _calculateCompletedDays() {
+    int count = 0;
+    for (var category in categories) {
+      count += plans[category]?.where((day) => day['isCompleted'] == true).length ?? 0;
+    }
+    return count;
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -114,151 +152,159 @@ class _HomeScreenState extends State<HomeScreen> {
     if (completedDays == 1) return 'Amazing start! Keep it up! 🎉';
     if (completedDays == 2) return 'Great job completing 2 days! 💪';
     if (completedDays == 3) return 'Fantastic progress! You’ve done 3 days! 🌟';
-    if (completedDays <= 5)
-      return 'Wow! Keep going! Day $completedDays complete! 🚀';
+    if (completedDays <= 5) return 'Wow! Keep going! Day $completedDays complete! 🚀';
     return 'Incredible! $completedDays days of progress! 🎯';
   }
 
   @override
   Widget build(BuildContext context) {
     final category = categories[_selectedIndex];
-    final themeColor = themeColors[category]!;
-    final categoryPlans = plans[category]!;
+    final themeColor = themeColors[category] ?? Colors.grey;
+    final categoryPlans = plans[category] ?? [];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Fitness: $category'),
-        backgroundColor: themeColor,
+        appBar: AppBar(
+            backgroundColor: themeColor,
         centerTitle: true,
-      ),
-      body: Container(
-        color: themeColor.withOpacity(0.1),
-        child: Column(
-          children: [
-            Consumer<UserProvider>(
-              builder: (context, userProvider, child) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "${userProvider.username},Follow plan according to yours BMI and get target weight🎉💪",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  ),
-                );
-              },
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            // Appreciation Banner
-            Text(
-              getAppreciationMessage(completedDays),
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            _buildProgressIndicator(categoryPlans, themeColor),
-            Expanded(
-              child: ListView.builder(
-                itemCount: categoryPlans.length,
-                itemBuilder: (context, index) {
-                  final plan = categoryPlans[index];
-                  final exercises = plan['exercise'] as List<String>;
-                  final diet = plan['diet'] as Map<String, String>;
-                  final quote = plan['quote'] as String;
 
-                  return Card(
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    elevation: 5,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                plan['day'],
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Checkbox(
-                                value: plan['isCompleted'],
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (plan['isCompleted'] == false &&
-                                        value == true) {
-                                      completedDays++;
-                                    } else if (plan['isCompleted'] == true &&
-                                        value == false) {
-                                      completedDays--;
-                                    }
-                                    plan['isCompleted'] = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            quote,
-                            style: TextStyle(
-                              fontStyle: FontStyle.italic,
-                              color: themeColor,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Exercises:',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          ...exercises.map((exercise) => Text('- $exercise')),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Diet:',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text('• Breakfast: ${diet['breakfast']}'),
-                          Text('• Lunch: ${diet['lunch']}'),
-                          Text('• Dinner: ${diet['dinner']}'),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
+           title:  Text('Fitness: $category'),
+
+
+actions: [
+  IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>Setting()));},
+      icon: Icon(Icons.more_vert_sharp))
+],
+
+
+
+
+
+    ),
+    body: Container(
+    color: themeColor.withOpacity(0.1),
+    child: Column(
+    children: [
+    Consumer<UserProvider>(
+    builder: (context, userProvider, child) {
+    return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Text(
+    "${userProvider.username}, follow the plan according to your BMI and achieve your target weight 🎉💪",
+    style: const TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+    fontSize: 16),
+    ),
+    );
+    },
+    ),
+    const SizedBox(height: 40),
+    Text(
+    getAppreciationMessage(completedDays),
+    textAlign: TextAlign.center,
+    style: const TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+    ),
+    ),
+    _buildProgressIndicator(categoryPlans, themeColor),
+    Expanded(
+    child: ListView.builder(
+    itemCount: categoryPlans.length,
+    itemBuilder: (context, index) {
+    final plan = categoryPlans[index];
+    final exercises = plan['exercise'] as List<String>;
+    final diet = plan['diet'] as Map<String, String>;
+    final quote = plan['quote'] as String;
+
+    return Card(
+    margin: const EdgeInsets.symmetric(
+    horizontal: 12, vertical: 8),
+    shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(15),
+    ),
+    elevation: 5,
+    child: Padding(
+    padding: const EdgeInsets.all(12.0),
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+    Text(
+    plan['day'],
+    style: const TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    ),
+    ),
+    Checkbox(
+    value: plan['isCompleted'] ?? false,
+    onChanged: (value) {
+    setState(() {
+    if (plan['isCompleted'] == false &&
+    value == true) {
+    completedDays++;
+    } else if (plan['isCompleted'] == true &&
+    value == false) {
+    completedDays--;
+    }
+    plan['isCompleted'] = value!;
+    });
+    _saveDayState(category, index, value!);
+    },
+    ),
+    ],
+    ),
+    const SizedBox(height: 10),
+    Text(
+    quote,
+    style: TextStyle(
+    fontStyle: FontStyle.italic,
+    color: themeColor,
+    ),
+    ),
+    const SizedBox(height: 10),
+    const Text(
+    'Exercises:',
+    style: TextStyle(fontWeight: FontWeight.bold),
+    ),
+    ...exercises.map((exercise) => Text('- $exercise')),
+    const SizedBox(height: 10),
+    const Text(
+    'Diet:',
+    style: TextStyle(fontWeight: FontWeight.bold),
+    ),
+    Text('• Breakfast: ${diet['breakfast']}'),
+    Text('• Lunch: ${diet['lunch']}'),
+    Text('• Dinner: ${diet['dinner']}'),
+    ],
+    ),
+    ),
+    );
+    },
+    ),
+    ),
+    ],
+    ),
+    ), bottomNavigationBar: BottomNavigationBar(
+      items: categories
+          .map(
+            (category) => BottomNavigationBarItem(
+          icon: Icon(Icons.fitness_center, color: themeColors[category]),
+          label: category,
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: categories
-            .map(
-              (category) => BottomNavigationBarItem(
-                icon: Icon(Icons.fitness_center, color: themeColors[category]),
-                label: category,
-              ),
-            )
-            .toList(),
-        currentIndex: _selectedIndex,
-        selectedItemColor: themeColor,
-        unselectedItemColor: Colors.grey,
-        backgroundColor: Colors.white,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-      ),
+      )
+          .toList(),
+      currentIndex: _selectedIndex,
+      selectedItemColor: themeColor,
+      unselectedItemColor: Colors.grey,
+      backgroundColor: Colors.white,
+      onTap: _onItemTapped,
+      type: BottomNavigationBarType.fixed,
+    ),
     );
   }
 
@@ -290,3 +336,260 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+// import 'package:flutter/material.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:provider/provider.dart';
+// import 'userProvider.dart';
+// import 'Setting.dart';
+//
+// class HomeScreen extends StatefulWidget {
+//   const HomeScreen({Key? key}) : super(key: key);
+//
+//   @override
+//   _HomeScreenState createState() => _HomeScreenState();
+// }
+//
+// class _HomeScreenState extends State<HomeScreen> {
+//   int _selectedIndex = 0;
+//   int completedDays = 0;
+//
+//   final List<String> categories = ['Normal', 'Underweight', 'Overweight', 'Obese'];
+//   final Map<String, Color> themeColors = {
+//     'Normal': Colors.blueAccent,
+//     'Underweight': Colors.purpleAccent,
+//     'Overweight': Colors.orangeAccent,
+//     'Obese': Colors.redAccent,
+//   };
+//
+//   final Map<String, List<Map<String, dynamic>>> plans = {
+//     // Same "plans" data as your provided code
+//   };
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _loadCompletedDays();
+//   }
+//
+//   Future<void> _loadCompletedDays() async {
+//     final prefs = await SharedPreferences.getInstance();
+//     for (var category in categories) {
+//       for (int i = 0; i < (plans[category]?.length ?? 0); i++) {
+//         final key = '${category}_Day$i';
+//         plans[category]![i]['isCompleted'] = prefs.getBool(key) ?? false;
+//       }
+//     }
+//     setState(() {
+//       completedDays = _calculateCompletedDays();
+//     });
+//   }
+//
+//   Future<void> _saveDayState(String category, int index, bool value) async {
+//     final prefs = await SharedPreferences.getInstance();
+//     final key = '${category}_Day$index';
+//     await prefs.setBool(key, value);
+//   }
+//
+//   int _calculateCompletedDays() {
+//     int count = 0;
+//     for (var category in categories) {
+//       count += plans[category]?.where((day) => day['isCompleted'] == true).length ?? 0;
+//     }
+//     return count;
+//   }
+//
+//   void _onItemTapped(int index) {
+//     setState(() {
+//       _selectedIndex = index;
+//     });
+//   }
+//
+//   String getAppreciationMessage(int completedDays) {
+//     if (completedDays == 0) return 'Let’s get started! Today is the day! 🌟';
+//     if (completedDays == 1) return 'Amazing start! Keep it up! 🎉';
+//     if (completedDays == 2) return 'Great job completing 2 days! 💪';
+//     if (completedDays == 3) return 'Fantastic progress! You’ve done 3 days! 🌟';
+//     if (completedDays <= 5) return 'Wow! Keep going! Day $completedDays complete! 🚀';
+//     return 'Incredible! $completedDays days of progress! 🎯';
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final category = categories[_selectedIndex];
+//     final themeColor = themeColors[category] ?? Colors.grey;
+//     final categoryPlans = plans[category] ?? [];
+//
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: themeColor,
+//         centerTitle: true,
+//         title: Text('Fitness: $category'),
+//         actions: [
+//           IconButton(
+//             icon: Icon(Icons.settings),
+//             onPressed: () {
+//               Navigator.push(
+//                 context,
+//                 MaterialPageRoute(builder: (context) => Setting()),
+//               );
+//             },
+//           ),
+//         ],
+//       ),
+//       body: Container(
+//         color: themeColor.withOpacity(0.1),
+//         child: Column(
+//           children: [
+//             Consumer<UserProvider>(
+//               builder: (context, userProvider, child) {
+//                 return Padding(
+//                   padding: const EdgeInsets.all(8.0),
+//                   child: Text(
+//                     "${userProvider.username}, follow the plan according to your BMI and achieve your target weight 🎉💪",
+//                     style: const TextStyle(
+//                       color: Colors.black,
+//                       fontWeight: FontWeight.bold,
+//                       fontSize: 16,
+//                     ),
+//                   ),
+//                 );
+//               },
+//             ),
+//             const SizedBox(height: 40),
+//             Text(
+//               getAppreciationMessage(completedDays),
+//               textAlign: TextAlign.center,
+//               style: const TextStyle(
+//                 fontSize: 18,
+//                 fontWeight: FontWeight.bold,
+//                 color: Colors.black,
+//               ),
+//             ),
+//             _buildProgressIndicator(categoryPlans, themeColor),
+//             Expanded(
+//               child: ListView.builder(
+//                 itemCount: categoryPlans.length,
+//                 itemBuilder: (context, index) {
+//                   final plan = categoryPlans[index];
+//                   final exercises = plan['exercise'] as List<String>;
+//                   final diet = plan['diet'] as Map<String, String>;
+//                   final quote = plan['quote'] as String;
+//
+//                   return Card(
+//                     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+//                     shape: RoundedRectangleBorder(
+//                       borderRadius: BorderRadius.circular(15),
+//                     ),
+//                     elevation: 5,
+//                     child: Padding(
+//                       padding: const EdgeInsets.all(12.0),
+//                       child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Row(
+//                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                             children: [
+//                               Text(
+//                                 plan['day'],
+//                                 style: const TextStyle(
+//                                   fontSize: 18,
+//                                   fontWeight: FontWeight.bold,
+//                                 ),
+//                               ),
+//                               Checkbox(
+//                                 value: plan['isCompleted'] ?? false,
+//                                 onChanged: (value) {
+//                                   setState(() {
+//                                     if (plan['isCompleted'] == false &&
+//                                         value == true) {
+//                                       completedDays++;
+//                                     } else if (plan['isCompleted'] == true &&
+//                                         value == false) {
+//                                       completedDays--;
+//                                     }
+//                                     plan['isCompleted'] = value!;
+//                                   });
+//                                   _saveDayState(category, index, value!);
+//                                 },
+//                               ),
+//                             ],
+//                           ),
+//                           const SizedBox(height: 10),
+//                           Text(
+//                             quote,
+//                             style: TextStyle(
+//                               fontStyle: FontStyle.italic,
+//                               color: themeColor,
+//                             ),
+//                           ),
+//                           const SizedBox(height: 10),
+//                           const Text(
+//                             'Exercises:',
+//                             style: TextStyle(fontWeight: FontWeight.bold),
+//                           ),
+//                           ...exercises.map((exercise) => Text('- $exercise')),
+//                           const SizedBox(height: 10),
+//                           const Text(
+//                             'Diet:',
+//                             style: TextStyle(fontWeight: FontWeight.bold),
+//                           ),
+//                           Text('• Breakfast: ${diet['breakfast']}'),
+//                           Text('• Lunch: ${diet['lunch']}'),
+//                           Text('• Dinner: ${diet['dinner']}'),
+//                         ],
+//                       ),
+//                     ),
+//                   );
+//                 },
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//       bottomNavigationBar: BottomNavigationBar(
+//         items: categories
+//             .map(
+//               (category) => BottomNavigationBarItem(
+//             icon: Icon(Icons.fitness_center, color: themeColors[category]),
+//             label: category,
+//           ),
+//         )
+//             .toList(),
+//         currentIndex: _selectedIndex,
+//         selectedItemColor: themeColor,
+//         unselectedItemColor: Colors.grey,
+//         backgroundColor: Colors.white,
+//         onTap: _onItemTapped,
+//         type: BottomNavigationBarType.fixed,
+//       ),
+//     );
+//   }
+//
+//   Widget _buildProgressIndicator(
+//       List<Map<String, dynamic>> plans, Color themeColor) {
+//     final completedDays =
+//         plans.where((day) => day['isCompleted'] == true).length;
+//
+//     return Padding(
+//       padding: const EdgeInsets.all(12.0),
+//       child: Column(
+//         children: [
+//           LinearProgressIndicator(
+//             value: completedDays / 30,
+//             color: themeColor,
+//             backgroundColor: themeColor.withOpacity(0.3),
+//           ),
+//           const SizedBox(height: 8),
+//           Text(
+//             '$completedDays of 30 Days Completed',
+//             style: TextStyle(
+//               color: themeColor,
+//               fontWeight: FontWeight.bold,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

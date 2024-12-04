@@ -17,166 +17,168 @@ class _step7State extends State<step7> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
+        body: SafeArea(
+          child: Column(
 
-          children: [
-            SizedBox(height: 50,),
-            Text('Goal',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-            SizedBox(height: 16,),
-            Text('Step: 6',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-            SizedBox(height: 16,),
-            Consumer<UserProvider>(
-              builder: (context, userProvider, child) {
-                return Text("${userProvider.username},What is your target weight?",
-                  style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),);
-              },
-            ),
-            SizedBox(height: 50,),
-            Container(
-              decoration: BoxDecoration(
-
+            children: [
+              SizedBox(height: 30,),
+              Text('Goal',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+              SizedBox(height: 20),
+              Text('Step: 7',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.green),),
+              SizedBox(height: 20),
+              Consumer<UserProvider>(
+                builder: (context, userProvider, child) {
+                  return Text("${userProvider.username},What is your target weight?",
+                    style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),);
+                },
               ),
-              child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "pick your target weight?",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 8,
-                                offset: Offset(2, 4),
+              SizedBox(height: 50,),
+              Container(
+                decoration: BoxDecoration(
+
+                ),
+                child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "pick your target weight?",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
                               ),
-                            ],
-                          ),
-                          child: DropdownButtonHideUnderline(
-
-                            child: DropdownButton<String>(
-                              // value: ageList.contains(selectedAge) ? selectedAge : null,
-                              value: selectedWeight,
-                              isExpanded: true,
-                              hint: Text("Select your target weight"),
-                              style: TextStyle(fontSize: 18, color: Colors.black87),
-                              items: ageList.map((age) {
-                                return DropdownMenuItem(
-                                  value: age,
-                                  child: Text(age),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedWeight = value;
-                                });
-                              },
                             ),
                           ),
-                        ),
-                        SizedBox(height: 30),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (selectedWeight != null) {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: Text(
-                                    "Target weight Selected",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  content: Text(
-                                    "You selected target weight: $selectedWeight",
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(
-                                        "OK",
-                                        style: TextStyle(color: Colors.purple),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Please select a target weight!"),
-                                  backgroundColor: Colors.red,
-                                  duration: Duration(seconds: 2),
-                                ),
-                              );
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                            shape: RoundedRectangleBorder(
+                          SizedBox(height: 20),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 8,
+                                  offset: Offset(2, 4),
+                                ),
+                              ],
                             ),
-                            backgroundColor: Colors.pinkAccent,
-                            elevation: 5,
-                          ),
-                          child: Text(
+                            child: DropdownButtonHideUnderline(
 
-                            "Submit weight",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.white),
-                          ),
-                        ),
-                        if (selectedWeight != null) ...[
-                          SizedBox(height: 40),
-                          Text(
-                            "Your target weight: $selectedWeight cm",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              child: DropdownButton<String>(
+                                // value: ageList.contains(selectedAge) ? selectedAge : null,
+                                value: selectedWeight,
+                                isExpanded: true,
+                                hint: Text("Select your target weight"),
+                                style: TextStyle(fontSize: 18, color: Colors.black87),
+                                items: ageList.map((age) {
+                                  return DropdownMenuItem(
+                                    value: age,
+                                    child: Text(age),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedWeight = value;
+                                  });
+                                },
+                              ),
                             ),
                           ),
-                        ],
-                      ]
-                  )
+                          SizedBox(height: 30),
+                          ElevatedButton(
+                            onPressed: () {
+                              if (selectedWeight != null) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(
+                                      "Target weight Selected",
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    content: Text(
+                                      "You selected target weight: $selectedWeight",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          "OK",
+                                          style: TextStyle(color: Colors.purple),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Please select a target weight!"),
+                                    backgroundColor: Colors.red,
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              backgroundColor: Colors.pinkAccent,
+                              elevation: 5,
+                            ),
+                            child: Text(
+
+                              "Submit weight",
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.white),
+                            ),
+                          ),
+                          if (selectedWeight != null) ...[
+                            SizedBox(height: 40),
+                            Text(
+                              "Your target weight: $selectedWeight cm",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ]
+                    )
+                ),
               ),
-            ),
 
 
-SizedBox(height: 80,),
-            Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),),
-
-
-
-                onPressed: validateAndProceed,
-                child: Text("Next",style: TextStyle(fontSize: 18),),
-              ),
-            )
+          SizedBox(height: 80,),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),),
 
 
 
+                  onPressed: validateAndProceed,
+                  child: Text("Next",style: TextStyle(fontSize: 18),),
+                ),
+              )
 
-          ],
 
+
+
+            ],
+
+          ),
         )
     );
   }

@@ -176,10 +176,10 @@ class _step1State extends State<step1> {
               height: 10,
             ),
             Consumer<UserProvider>(
-    builder: (context, userProvider, child) {
+          builder: (context, userProvider, child) {
       return Text("${userProvider.username},Choose your gender please",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),);
-    } ),
-Spacer(),
+          } ),
+      Spacer(),
            // SizedBox(height: 60),
           Padding(
             padding: const EdgeInsets.only(bottom: 220),

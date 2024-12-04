@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:untitled1/loginScreen.dart';
 import 'package:untitled1/nameScreen.dart';
+import 'package:untitled1/signUpScreen.dart';
 
 class FitnessOnboardingScreen extends StatefulWidget {
   @override
@@ -38,6 +40,7 @@ class _FitnessOnboardingScreenState extends State<FitnessOnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           // PageView for onboarding content
@@ -132,7 +135,7 @@ class _FitnessOnboardingScreenState extends State<FitnessOnboardingScreen> {
 
   void _navigateToHome(BuildContext context) {
     // Navigate to your app's main screen
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>nameScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>AuthScreen()));
   }
 }
 
