@@ -10,7 +10,9 @@ class Setting extends StatefulWidget {
   State<Setting> createState() => _SettingState();
 }
 
-class _SettingState extends State<Setting> {
+ class _SettingState extends State<Setting> {
+
+
   final InAppReview inAppReview = InAppReview.instance;
 
   void _requestReview() async {
@@ -62,7 +64,7 @@ class _SettingState extends State<Setting> {
           ),
           SizedBox(height: 30,),
           GestureDetector(
-            onTap: ()=>_requestReview,
+            // onTap: ()=>
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(height: 50,

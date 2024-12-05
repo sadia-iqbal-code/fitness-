@@ -40,8 +40,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   firebase_auth:
   firebase_core:
-  in_app_review: ^2.0.4
-  share_plus: ^6.0.5
+
 
   firebase_cloud_firestore:
   cloud_firestore:
@@ -53,8 +52,8 @@ dependencies:
   provider:
   flutter_picker:
   shared_preferences:
-
-
+  in_app_review:
+  share_plus:
   url_launcher:
   numberpicker: ^2.1.2
 dev_dependencies:
@@ -65,7 +64,7 @@ flutter_icons:
   android: true
   ios: true
   image_path: 'assets/no.png'
-  in_app_review: ^2.0.5
+
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
