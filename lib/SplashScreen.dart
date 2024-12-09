@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen>
     // Navigate to the next screen after the animation
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => BackgroundVideoScreen()),
+        MaterialPageRoute(builder: (context) => FitnessVideoScreen()),
       );
     });
   }

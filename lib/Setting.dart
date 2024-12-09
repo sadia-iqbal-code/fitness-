@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:untitled1/privacyPolicy.dart';
@@ -64,7 +65,7 @@ class Setting extends StatefulWidget {
           ),
           SizedBox(height: 30,),
           GestureDetector(
-            // onTap: ()=>
+             onTap: (){showRateUsDialog(context);},
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(height: 50,
@@ -94,7 +95,7 @@ class Setting extends StatefulWidget {
             onTap: (){
 
               Share.share(
-                'Check out this amazing app! com.Scholarship.app',
+                'Check out this amazing app! com.Fitness.app',
                 subject: 'Amazing App',
               );
             },
@@ -127,26 +128,67 @@ class Setting extends StatefulWidget {
       ),
     );
   }
-  void rateUsDialogue(BuildContext context){
-    showModalBottomSheet(context: context, builder: (BuildContext context){
-      return Container(
-        padding: EdgeInsets.all(16.0),
-        height: 300,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+
+  Future<void> showRateUsDialog(BuildContext context) async {
+    double userRating = 0.0;
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Rate Us'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Rate Us',style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-            SizedBox(height: 20,),
-            Text('If you enjoy using our app, please take a moment to rate us. Your feedback is important to us!',style: TextStyle(fontSize: 16),),
-            SizedBox(height: 20,),
-            ElevatedButton(onPressed: (){Navigator.pop(context);}, child: Text('Rate Now'),),
-            TextButton(onPressed: (){Navigator.pop(context);}, child: Text('Cancel')),
+            Text('How was your experience?'),
+            SizedBox(height: 16),
+            RatingBar.builder(
+              initialRating: 0,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+                userRating = rating;
+              },
+            ),
           ],
         ),
-      );
-    });
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Save the rating or take appropriate action
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Thanks for rating us $userRating stars!')),
+              );
+            },
+            child: Text('Submit'),
+          ),
+        ],
+      ),
+    );
   }
-}
+
+
+
+
+
+
+
+
+
+ }
 
 
 

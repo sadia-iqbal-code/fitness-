@@ -113,7 +113,7 @@ class NameScreen extends StatelessWidget {
         centerTitle: true,
         title: Consumer<UserProvider>(builder: (context, userProvider, child) {
           return Text(
-            "Hello, ${userProvider.username} I am your fitness planner",
+            "Hello, I am your fitness planner",
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           );
         }),
@@ -121,76 +121,73 @@ class NameScreen extends StatelessWidget {
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'Please Enter Your Name Here',
-                        style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Please Enter Your Name Here',
+                      style:
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      labelText: "Your Name",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Provider.of<UserProvider>(context, listen: false)
+                            .setUsername(nameController.text);
+                        if (nameController.text.isEmpty) {
+                          // Show error message if name is not entered
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Validation Error'),
+                              content: const Text('Please enter your name.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                   child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          // Navigate to the next screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Step1(), // Next screen
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 15),
+                      ),
+                      child: const Text(
+                        'Next',
+                        style: TextStyle(fontSize: 18),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: "Your Name",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Provider.of<UserProvider>(context, listen: false)
-                              .setUsername(nameController.text);
-                          if (nameController.text.isEmpty) {
-                            // Show error message if name is not entered
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Validation Error'),
-                                content: const Text('Please enter your name.'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else {
-                            // Navigate to the next screen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => step1(), // Next screen
-                              ),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 15),
-                        ),
-                        child: const Text(
-                          'Next',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );

@@ -53,11 +53,13 @@
 // }
 
 
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:untitled1/nameScreen.dart';
+import 'package:flutter/material.dart';
+
+
 
 import 'forget.dart';
+import 'nameScreen.dart';
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -66,6 +68,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final _auth = FirebaseAuth.instance;
 
   // Controllers
@@ -94,7 +97,7 @@ class _AuthScreenState extends State<AuthScreen> {
         // Signup
         await _auth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
-          password: _passwordController.text.trim(), 
+          password: _passwordController.text.trim(),
         );
       }
 Navigator.push(context, MaterialPageRoute(builder: (context)=>NameScreen()));
@@ -205,7 +208,9 @@ Navigator.push(context, MaterialPageRoute(builder: (context)=>NameScreen()));
                                   horizontal: 24,
                                 ),
                               ),
-                              onPressed: _submitAuthForm,
+                              onPressed:_submitAuthForm,
+
+
                               child: Text(
                                 _isLogin ? 'Login' : 'Signup',
                                 style: const TextStyle(fontSize: 18),

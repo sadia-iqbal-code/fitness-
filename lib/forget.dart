@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -8,9 +9,10 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void _resetPassword() async {
+   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void>_resetPassword() async {
     final email = _emailController.text.trim();
 
     if (email.isEmpty) {
@@ -64,7 +66,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _resetPassword,
+              onPressed:_resetPassword,
               child: Text('Send Password Reset Email'),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 15),

@@ -135,19 +135,178 @@
 
 
 
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+// import 'package:untitled1/step2.dart';
+// import 'package:untitled1/userProvider.dart';
+//
+// class step1 extends StatefulWidget {
+//   const step1({Key? key}) : super(key: key);
+//
+//   @override
+//   _step1State createState() => _step1State();
+// }
+//
+// class _step1State extends State<step1> {
+//   String? selectedGender;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Select Your Gender'),
+//         backgroundColor: Colors.teal,
+//       ),
+//       body: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           SizedBox(
+//               height: 30,
+//             ),
+//
+//             Text(
+//               'Goal',
+//               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+//             ),
+//             Text(
+//               'Step : 1',
+//               style: TextStyle(fontSize: 18, color: Colors.green,fontWeight: FontWeight.bold),
+//             ),
+//             SizedBox(
+//               height: 10,
+//             ),
+//             Consumer<UserProvider>(
+//           builder: (context, userProvider, child) {
+//       return Text("${userProvider.username},Choose your gender please",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),);
+//           } ),
+//       Spacer(),
+//            // SizedBox(height: 60),
+//           Padding(
+//             padding: const EdgeInsets.only(bottom: 220),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//               children: [
+//                 // Male Option
+//                 GestureDetector(
+//                   onTap: () {
+//                     setState(() {
+//                       selectedGender = 'Male';
+//                     });
+//                   },
+//                   child: SingleChildScrollView(
+//                     child: Column(
+//                       children: [
+//                         CircleAvatar(
+//                           radius: 50,
+//                           backgroundColor:
+//                           selectedGender == 'Male' ? Colors.blue : Colors.grey,
+//                           child: Icon(
+//                             Icons.male,
+//                             size: 50,
+//                             color: Colors.white,
+//                           ),
+//                         ),
+//                         const SizedBox(height: 10),
+//                         const Text(
+//                           'Male',
+//                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//                 // Female Option
+//                 GestureDetector(
+//                   onTap: () {
+//                     setState(() {
+//                       selectedGender = 'Female';
+//                     });
+//                   },
+//                   child: Column(
+//                     children: [
+//                       CircleAvatar(
+//                         radius: 50,
+//                         backgroundColor: selectedGender == 'Female'
+//                             ? Colors.pink
+//                             : Colors.grey,
+//                         child: Icon(
+//                           Icons.female,
+//                           size: 50,
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 10),
+//                       const Text(
+//                         'Female',
+//                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//           const SizedBox(height: 30),
+//           Padding(
+//             padding: const EdgeInsets.only(bottom: 80),
+//             child: ElevatedButton(
+//               onPressed: () {
+//                 if (selectedGender == null) {
+//                   // Show error message if gender not selected
+//                   showDialog(
+//                     context: context,
+//                     builder: (context) => AlertDialog(
+//                       title: const Text('Validation Error'),
+//                       content: const Text('Please select your gender.'),
+//                       actions: [
+//                         TextButton(
+//                           onPressed: () {
+//                             Navigator.of(context).pop();
+//                           },
+//                           child: const Text('OK'),
+//                         ),
+//                       ],
+//                     ),
+//                   );
+//                 } else {
+//                   // Navigate to the next screen
+//                   Navigator.push(
+//                     context,
+//                     MaterialPageRoute(
+//                       builder: (context) => step2(), // Replace with your next screen
+//                     ),
+//                   );
+//                 }
+//               },
+//               style: ElevatedButton.styleFrom(
+//                 backgroundColor: Colors.teal,
+//                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+//               ),
+//               child: const Text(
+//                 'Next',
+//                 style: TextStyle(fontSize: 18),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:untitled1/step2.dart';
 import 'package:untitled1/userProvider.dart';
 
-class step1 extends StatefulWidget {
-  const step1({Key? key}) : super(key: key);
+class Step1 extends StatefulWidget {
+  const Step1({Key? key}) : super(key: key);
 
   @override
-  _step1State createState() => _step1State();
+  _Step1State createState() => _Step1State();
 }
 
-class _step1State extends State<step1> {
+class _Step1State extends State<Step1> {
   String? selectedGender;
 
   @override
@@ -157,50 +316,55 @@ class _step1State extends State<step1> {
         title: const Text('Select Your Gender'),
         backgroundColor: Colors.teal,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-              height: 30,
-            ),
-
-            Text(
-              'Goal',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            Text(
-              'Step : 1',
-              style: TextStyle(fontSize: 18, color: Colors.green,fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Consumer<UserProvider>(
-          builder: (context, userProvider, child) {
-      return Text("${userProvider.username},Choose your gender please",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),);
-          } ),
-      Spacer(),
-           // SizedBox(height: 60),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 220),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Male Option
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedGender = 'Male';
-                    });
-                  },
-                  child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 30),
+              const Text(
+                'Goal',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              const Text(
+                'Step : 1',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Consumer<UserProvider>(
+                builder: (context, userProvider, child) {
+                  return Text(
+                    "${userProvider.username}, choose your gender please.",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  );
+                },
+              ),
+              const SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedGender = 'Male';
+                      });
+                    },
                     child: Column(
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundColor:
-                          selectedGender == 'Male' ? Colors.blue : Colors.grey,
-                          child: Icon(
+                          backgroundColor: selectedGender == 'Male'
+                              ? Colors.blue
+                              : Colors.grey,
+                          child: const Icon(
                             Icons.male,
                             size: 50,
                             color: Colors.white,
@@ -214,81 +378,76 @@ class _step1State extends State<step1> {
                       ],
                     ),
                   ),
-                ),
-                // Female Option
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedGender = 'Female';
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundColor: selectedGender == 'Female'
-                            ? Colors.pink
-                            : Colors.grey,
-                        child: Icon(
-                          Icons.female,
-                          size: 50,
-                          color: Colors.white,
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedGender = 'Female';
+                      });
+                    },
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: selectedGender == 'Female'
+                              ? Colors.pink
+                              : Colors.grey,
+                          child: const Icon(
+                            Icons.female,
+                            size: 50,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        'Female',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 30),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 80),
-            child: ElevatedButton(
-              onPressed: () {
-                if (selectedGender == null) {
-                  // Show error message if gender not selected
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Validation Error'),
-                      content: const Text('Please select your gender.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('OK'),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Female',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
-                  );
-                } else {
-                  // Navigate to the next screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => step2(), // Replace with your next screen
-                    ),
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  ),
+                ],
               ),
-              child: const Text(
-                'Next',
-                style: TextStyle(fontSize: 18),
+              const SizedBox(height: 50),
+              ElevatedButton(
+                onPressed: () {
+                  if (selectedGender == null) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Validation Error'),
+                        content: const Text('Please select your gender.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>  step2(),
+                      ),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                ),
+                child: const Text(
+                  'Next',
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
-            ),
+              const SizedBox(height: 20),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
