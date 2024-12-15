@@ -95,7 +95,7 @@ class Setting extends StatefulWidget {
             onTap: (){
 
               Share.share(
-                'Check out this amazing app! com.Fitness.app',
+                'Check out this amazing app! com.fitness.app',
                 subject: 'Amazing App',
               );
             },
